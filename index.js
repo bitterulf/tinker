@@ -1,3 +1,5 @@
+require('dotenv').config()
+
 const Hapi = require('hapi');
 const config = require('./config.json');
 const fs = require('fs');
@@ -11,7 +13,7 @@ const server = new Hapi.Server();
 
 server.connection({
     host: 'localhost',
-    port: 8000
+    port: process.env.PORT || 8000
 });
 
 const downloadContent = function(contentUrl, contentDirectory, tempDir, cb) {

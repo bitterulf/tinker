@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/bitterulf/tinker#readme",
   "dependencies": {
+    "dotenv": "^4.0.0",
     "download": "^6.2.5",
     "hapi": "^16.5.2",
     "install": "^0.10.1",
