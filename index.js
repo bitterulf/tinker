@@ -55,7 +55,7 @@ const downloadGenerator = function(generatorUrl, generatorDirectory, tempDir, cb
 };
 
 server.route({
-    method: 'GET',
+    method: ['GET', 'POST'],
     path:'/build/{project}/{secret}',
     handler: function (request, reply) {
         const project = request.params.project;
