@@ -1,0 +1,9 @@
+{
+    "site1": {
+        "build": "foo",
+        "content": "www.example.com/content.zip",
+        "contentDirectory": "example-master",
+        "path": "./foo",
+        "secret": "secret"
+    }
+}

@@ -1,0 +1,28 @@
+{
+  "name": "tinker",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bitterulf/tinker.git"
+  },
+  "author": "",
+  "license": "",
+  "bugs": {
+    "url": "https://github.com/bitterulf/tinker/issues"
+  },
+  "homepage": "https://github.com/bitterulf/tinker#readme",
+  "dependencies": {
+    "download": "^6.2.5",
+    "hapi": "^16.5.2",
+    "install": "^0.10.1",
+    "npm": "^5.4.0",
+    "recursive-copy": "^2.0.6",
+    "rmdir": "^1.2.0",
+    "unzip": "^0.1.11"
+  }
+}
