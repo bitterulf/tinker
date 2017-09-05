@@ -1,8 +1,9 @@
 {
     "site1": {
-        "build": "foo",
         "content": "www.example.com/content.zip",
         "contentDirectory": "example-master",
+        "generator": "www.example.com/generator.zip",
+        "generatorDirectory": "example-master",
         "path": "./foo",
         "secret": "secret"
     }

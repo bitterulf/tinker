@@ -20,8 +20,6 @@
     "dotenv": "^4.0.0",
     "download": "^6.2.5",
     "hapi": "^16.5.2",
-    "install": "^0.10.1",
-    "npm": "^5.4.0",
     "recursive-copy": "^2.0.6",
     "rmdir": "^1.2.0",
     "unzip": "^0.1.11"
