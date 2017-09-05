@@ -5,6 +5,7 @@ const download = require('download');
 const unzip = require('unzip');
 const copy = require('recursive-copy');
 const rmdir = require('rmdir');
+const exec = require('child_process').exec;
 
 const server = new Hapi.Server();
 
@@ -12,6 +13,44 @@ server.connection({
     host: 'localhost',
     port: 8000
 });
+
+const downloadContent = function(contentUrl, contentDirectory, tempDir, cb) {
+    download(contentUrl).then(data => {
+
+        fs.writeFile(tempDir+'/content.zip', data, function() {
+            const writeStream = unzip.Extract({ path: tempDir });
+            const readStream = fs.createReadStream(tempDir+'/content.zip');
+            readStream.pipe(writeStream);
+
+            writeStream.on('finish', function () {
+                setTimeout(function() {
+                    copy(tempDir+'/'+contentDirectory, tempDir+'/build/content', function(err, results) {
+                        cb();
+                    });
+                }, 100);
+            });
+        });
+    });
+};
+
+const downloadGenerator = function(generatorUrl, generatorDirectory, tempDir, cb) {
+    download(generatorUrl).then(data => {
+
+        fs.writeFile(tempDir+'/generator.zip', data, function() {
+            const writeStream = unzip.Extract({ path: tempDir });
+            const readStream = fs.createReadStream(tempDir+'/generator.zip');
+            readStream.pipe(writeStream);
+
+            writeStream.on('finish', function () {
+                setTimeout(function() {
+                    copy(tempDir+'/'+generatorDirectory, tempDir+'/build', function(err, results) {
+                        cb();
+                    });
+                }, 100);
+            });
+        });
+    });
+};
 
 server.route({
     method: 'GET',
@@ -32,22 +71,27 @@ server.route({
             fs.mkdirSync('./temp/'+project+'/build');
         }
 
-        download(config[project].content).then(data => {
+        downloadContent(config[project].content, config[project].contentDirectory, './temp/'+project, function(){
+            downloadGenerator(config[project].generator, config[project].generatorDirectory, './temp/'+project, function(){
+                exec('npm install', {
+                  cwd: './temp/'+project+'/build'
+                }, function(error, stdout, stderr) {
 
-            fs.writeFile('./temp/'+project+'/content.zip', data, function() {
-                const writeStream = unzip.Extract({ path: './temp/'+project });
-                const readStream = fs.createReadStream('./temp/'+project+'/content.zip');
-                readStream.pipe(writeStream);
+                    exec('npm run generate', {
+                      cwd: './temp/'+project+'/build'
+                    }, function(error, stdout, stderr) {
 
-                writeStream.on('finish', function () {
-                    setTimeout(function() {
-                        copy('temp/'+project+'/documents-master', 'temp/'+project+'/build/content', function(err, results) {
+                        exec('ls', {
+                          cwd: './temp/'+project+'/build/generated'
+                        }, function(error, stdout, stderr) {
+                            rmdir(config[project].path);
 
-                            rmdir('./temp/'+project);
-
-                            return reply('project triggered');
+                            copy('./temp/'+project+'/build/generated', config[project].path, function(err, results) {
+                                rmdir('./temp/'+project);
+                                return reply('project triggered');
+                            });
                         });
-                    }, 100);
+                    });
                 });
             });
         });
